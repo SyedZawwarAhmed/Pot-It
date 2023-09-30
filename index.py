@@ -18,13 +18,25 @@ hole_pos = {
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         # Create a surface for the obstacle
-        self.image = pygame.Rect(300, 600, 100, 400)
+        self.image = pygame.Rect(x, y, 100, 400)
         # self.image.fill(color)
 
         # Get the Rect object for the obstacle and set its position
         self.rect = self.image
         self.rect.x = x
         self.rect.y = y
+
+class Hole:
+    def __init__(self, x, y, width, height):
+        # Create a surface for the obstacle
+        self.image = pygame.Rect(x, y, width, height)
+        # self.image.fill(color)
+
+        # Get the Rect object for the obstacle and set its position
+        self.rect = self.image
+        self.rect.x = x
+        self.rect.y = y
+
 
 class Ball():
     max_speed = 30
@@ -81,8 +93,7 @@ class Ball():
         else:
             self.speed = calculated_speed
 
-def check_collision(ball_rect, obstacle_rect):
-    collision_tolerance = 25
+def check_collision(ball_rect, obstacle_rect, collision_tolerance):
     if ball_rect.colliderect(obstacle_rect):
         if abs(obstacle_rect.top - ball_rect.bottom) < collision_tolerance and ball.dir[1] > 0:
             ball.dir[1] *= -1
@@ -98,6 +109,7 @@ shouldSetDirection = False
 score = 0
 ball = Ball(*pos)
 obstacle = Obstacle(300, 200, 100, 100, (58.8, 29.4, 0))  # (x, y, width, height, color)
+hole = Hole(800, 200, 60, 60)
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -117,6 +129,7 @@ while running:
     screen.fill("lightgrey")
 
     pygame.draw.rect(screen, (58.8, 29.4, 0), obstacle.image)
+    pygame.draw.rect(screen, (0,0,0), hole.image)
 
     font = pygame.font.SysFont("Arial", 36)
     txtsurf = font.render(f'Score: {ball.speed}', True, 'black')
@@ -139,7 +152,21 @@ while running:
         ball.dir[1] *= -1
 
     obstacle_rect = obstacle.rect
-    check_collision(ball_rect, obstacle_rect)
+    check_collision(ball_rect, obstacle_rect, 25)
+
+    pot_tolerance = 50
+    hole_rect = hole.rect
+    if ball_rect.colliderect(hole_rect):
+        if (hole_rect.top - ball_rect.bottom) < pot_tolerance:
+            isBallMoving = False
+        if (hole_rect.bottom - ball_rect.top) < pot_tolerance:
+            isBallMoving = False
+        if (hole_rect.right - ball_rect.left) < pot_tolerance:
+            isBallMoving = False
+        if (hole_rect.left - ball_rect.right) < pot_tolerance:
+            isBallMoving = False
+
+
 
     # if int(ball.pos[1]) == 200 and isBallMoving:
     #     print("Pot")
