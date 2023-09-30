@@ -27,8 +27,13 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.y = y
 
 
+import pygame
+import math
+
 class Ball():
     max_speed = 20
+    circle_radius = 50  # Adjust the radius as needed
+
     def __init__(self, x, y):
         self.pos = (x, y)
         mx, my = pygame.mouse.get_pos()
@@ -40,8 +45,8 @@ class Ball():
             self.dir = [self.dir[0]/length, self.dir[1]/length]
         angle = math.degrees(math.atan2(-self.dir[1], self.dir[0]))
 
-        self.ball = pygame.Surface((50 * 2, 50 * 2), pygame.SRCALPHA)
-        self.ball.fill((0, 255, 0))
+        self.ball = pygame.Surface((self.circle_radius * 2, self.circle_radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.ball, (0, 255, 0), (self.circle_radius, self.circle_radius), self.circle_radius)
         self.ball = pygame.transform.rotate(self.ball, angle)
         self.speed = 6
         self.rect = self.ball.get_rect()
@@ -51,9 +56,8 @@ class Ball():
         self.speed -= 0.08
 
     def draw(self, surf):
-        ball_rect = self.ball.get_rect(center = self.pos)
-        pygame.draw.circle(self.ball, 'green', (circle_radius, circle_radius), circle_radius)
-        surf.blit(self.ball, (ball_rect.x, ball_rect.y))  
+        ball_rect = self.ball.get_rect(center=self.pos)
+        surf.blit(self.ball, (ball_rect.x, ball_rect.y))
 
     def setDirection(self):
         mx, my = pygame.mouse.get_pos()
@@ -65,8 +69,8 @@ class Ball():
             self.dir = [self.dir[0]/length, self.dir[1]/length]
         angle = math.degrees(math.atan2(-self.dir[1], self.dir[0]))
 
-        self.ball = pygame.Surface((circle_radius * 2, circle_radius * 2), pygame.SRCALPHA)
-        self.ball.fill((0, 255, 0))
+        self.ball = pygame.Surface((self.circle_radius * 2, self.circle_radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.ball, (0, 255, 0), (self.circle_radius, self.circle_radius), self.circle_radius)
         self.ball = pygame.transform.rotate(self.ball, angle)
         self.rect = self.ball.get_rect()
     
