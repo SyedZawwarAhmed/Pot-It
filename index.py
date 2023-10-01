@@ -84,6 +84,16 @@ class Ball():
         else:
             self.speed = calculated_speed
 
+class RetryButton:
+    def __init__(self, x, y, width, height, image_path):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.image = pygame.image.load(image_path)
+        self.image = pygame.transform.scale(self.image, (width, height))
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+
 def check_collision(ball_rect, obstacle_rect, collision_tolerance):
     if ball_rect.colliderect(obstacle_rect):
         if abs(obstacle_rect.top - ball_rect.bottom) < collision_tolerance and ball.dir[1] > 0:
@@ -107,6 +117,8 @@ hole = Hole(800, 200, 60, 60)
 
 obstaclesList = []
 max_level = 2
+retry_button = RetryButton(screen_width - 150, screen_height - 150, 100, 100, "retry.png")
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -121,10 +133,17 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
-            isBallMoving = True
-            shouldSetDirection = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            shouldSetDirection = True
+            if not retry_button.rect.collidepoint(event.pos):
+                isBallMoving = True
+                shouldSetDirection = False
+        if event.type == pygame.MOUSEBUTTONDOWN:         
+            if retry_button.rect.collidepoint(event.pos):
+                    # Reset the game when the retry button is clicked
+                    ball = Ball(*pos)
+                    isBallMoving = False
+                    shouldSetDirection = False
+            else:
+                shouldSetDirection = True
 
 
     # fill the screen with a color to wipe away anything from last frame
@@ -170,6 +189,8 @@ while running:
         obstacle_rect = obstacle.rect
         check_collision(ball_rect, obstacle_rect, 25)
 
+    if not isBallMoving or ball.speed <= 0:
+        retry_button.draw(screen)
 
         # score += 1
 
