@@ -20,8 +20,6 @@ hole_pos = {
     "y": 200,
 }
 
-
-
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         # Create a surface for the obstacle
@@ -37,8 +35,6 @@ class Hole:
     def __init__(self, x, y, width, height):
         # Create a surface for the obstacle
         self.image = pygame.Rect(x, y, width, height)
-        # self.image.fill(color)
-
         # Get the Rect object for the obstacle and set its position
         self.rect = self.image
         self.rect.x = x
@@ -60,17 +56,12 @@ class Ball():
         else:
             self.dir = [self.dir[0]/length, self.dir[1]/length]
 
-        # self.ball = pygame.Surface((self.circle_radius * 2, self.circle_radius * 2), pygame.SRCALPHA)
-        # pygame.draw.circle(self.ball, (0, 255, 0), (self.circle_radius, self.circle_radius), self.circle_radius)
-        
-        # self.rect = self.ball.get_rect(center=self.pos)
-
-        self.ball = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
+        self.ball = pygame.Rect(self.pos[0], self.pos[1], circle_radius, circle_radius)
 
     def update(self):  
         self.pos = (self.pos[0] + self.dir[0] * self.speed, self.pos[1] + self.dir[1] * self.speed)
         self.speed -= 0.08
-        self.ball = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
+        self.ball = pygame.Rect(self.pos[0], self.pos[1], circle_radius, circle_radius)
 
 
     def setDirection(self):
@@ -83,14 +74,7 @@ class Ball():
         else:
             self.dir = [self.dir[0]/length, self.dir[1]/length]
 
-        # self.ball = pygame.Surface((self.circle_radius * 2, self.circle_radius * 2), pygame.SRCALPHA)
-        # pygame.draw.circle(self.ball, (0, 255, 0), (self.circle_radius, self.circle_radius), self.circle_radius)
-        # self.rect = self.ball.get_rect(center=self.pos)
-        self.ball = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
-
-    # def draw(self):
-    #     self.ball = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
-
+        self.ball = pygame.Rect(self.pos[0], self.pos[1], circle_radius, circle_radius)
     
     def setSpeed(self):
         mx, my = pygame.mouse.get_pos()
@@ -147,7 +131,6 @@ while running:
     hole_rect = hole.rect
     screen.blit(hole_image, hole.rect)
 
-    # if not screen.get_rect().collidepoint(ball.pos):
     screen_rect = screen.get_rect()
     
     if ball_rect.right >= screen_width or ball_rect.left <= 0:
@@ -156,7 +139,6 @@ while running:
         ball.dir[1] *= -1
 
 
-    # if ball_rect.collidepoint(hole_rect.center):
     if abs(ball_rect.x - hole_rect.x) < 50 and abs(ball_rect.y - hole_rect.y) < 50:
         isBallMoving = False
     else:
@@ -164,7 +146,6 @@ while running:
 
     for obstacle in obstaclesList:
         pygame.draw.rect(screen, obstacle_color, obstacle.image)
-    # pygame.draw.rect(screen, (0,0,0), hole.image)
 
     font = pygame.font.SysFont("Arial", 36)
     txtsurf = font.render(f'Level: {level}', True, 'black')
