@@ -1,9 +1,12 @@
 import pygame
-import math
+from Hole import Hole
+from Ball import Ball
+from RetryButton import RetryButton
+from levels import obstacles
 
-ball_image = pygame.image.load("ball.png") 
+ball_image = pygame.image.load("assets/ball.png") 
 ball_image = pygame.transform.scale(ball_image, (100, 100))
-hole_image = pygame.image.load("hole.png") 
+hole_image = pygame.image.load("assets/hole.png") 
 hole_image = pygame.transform.scale(hole_image, (100, 100))
 
 pygame.init()
@@ -12,85 +15,12 @@ screen_height = 900
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 running = True
-circle_radius= 50
 
 pos = (800, 700)
 hole_pos = {
     "x": 800,
     "y": 200,
 }
-
-class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height):
-        # Create a surface for the obstacle
-        self.image = pygame.Rect(x, y, width, height)
-        # self.image.fill(color)
-
-        # Get the Rect object for the obstacle and set its position
-        self.rect = self.image
-        self.rect.x = x
-        self.rect.y = y
-
-class Hole:
-    def __init__(self, x, y, width, height):
-        # Create a surface for the obstacle
-        self.image = pygame.Rect(x, y, width, height)
-        # Get the Rect object for the obstacle and set its position
-        self.rect = self.image
-        self.rect.x = x
-        self.rect.y = y
-
-
-class Ball():
-    max_speed = 30
-    circle_radius = 50  # Adjust the radius as needed
-
-    def __init__(self, x, y):
-        self.pos = (x, y)
-        self.speed = 0
-        mx, my = pygame.mouse.get_pos()
-        self.dir = [-mx + x, -my + y]
-        length = math.hypot(*self.dir)
-        if length == 0.0:
-            self.dir = [0, -1]
-        else:
-            self.dir = [self.dir[0]/length, self.dir[1]/length]
-
-        self.ball = pygame.Rect(self.pos[0], self.pos[1], circle_radius, circle_radius)
-
-    def update(self):  
-        self.pos = (self.pos[0] + self.dir[0] * self.speed, self.pos[1] + self.dir[1] * self.speed)
-        self.speed -= 0.08
-        self.ball = pygame.Rect(self.pos[0], self.pos[1], circle_radius, circle_radius)
-
-
-    def setDirection(self):
-        mx, my = pygame.mouse.get_pos()
-        self.dir = [-mx + self.pos[0], -my + self.pos[1]]
-        length = math.hypot(*self.dir)
-        if length == 0.0:
-            self.dir = [0, -1]
-        else:
-            self.dir = [self.dir[0]/length, self.dir[1]/length]
-
-        self.ball = pygame.Rect(self.pos[0], self.pos[1], circle_radius, circle_radius)
-    
-    def setSpeed(self):
-        mx, my = pygame.mouse.get_pos()
-        calculated_speed = math.sqrt((mx-self.pos[0])**2 + (my-self.pos[1])**2) / 10
-        if calculated_speed > self.max_speed:
-            self.speed = self.max_speed
-        else:
-            self.speed = calculated_speed
-
-class RetryButton:
-    def __init__(self, x, y, width, height, image_path):
-        self.rect = pygame.Rect(x, y, width, height)
-        self.image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(self.image, (width, height))
-
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
 
 
 def check_collision(ball_rect, obstacle_rect, collision_tolerance):
@@ -109,42 +39,12 @@ shouldSetDirection = False
 score = 0
 ball = Ball(*pos)
 obstacle_color = (58.8, 29.4, 0)
-obstacles = []
-# Level 1
-obstacles.append([Obstacle(650, 500, 450, 30), Obstacle(350, 300, 250, 30)])
-
-# Level 2
-obstacles.append([Obstacle(250, 500, 450, 30), Obstacle(850, 400, 450, 30), Obstacle(450, 200, 350, 30)])
-
-# Level 3
-obstacles.append([Obstacle(200, 550, 400, 30), Obstacle(750, 350, 350, 30), Obstacle(350, 150, 450, 30)])
-
-# Level 4
-obstacles.append([Obstacle(300, 450, 350, 30), Obstacle(600, 300, 400, 30), Obstacle(900, 400, 300, 30)])
-
-# Level 5
-obstacles.append([Obstacle(150, 50, 450, 30), Obstacle(950, 700, 350, 30), Obstacle(550, 450, 350, 30)])
-
-# Level 6
-obstacles.append([Obstacle(400, 250, 350, 30), Obstacle(800, 350, 450, 30), Obstacle(250, 450, 350, 30)])
-
-# Level 7
-obstacles.append([Obstacle(200, 450, 400, 30), Obstacle(600, 100, 350, 30), Obstacle(950, 300, 350, 30)])
-
-# Level 8
-obstacles.append([Obstacle(350, 350, 450, 30), Obstacle(750, 450, 350, 30), Obstacle(450, 50, 400, 30)])
-
-# Level 9
-obstacles.append([Obstacle(100, 150, 400, 30), Obstacle(900, 300, 450, 30), Obstacle(300, 400, 350, 30)])
-
-# Level 10
-obstacles.append([Obstacle(250, 250, 350, 30), Obstacle(700, 600, 400, 30), Obstacle(150, 500, 450, 30)])
-level = 3
+level = 1
 hole = Hole(800, 200, 60, 60)
 
 obstaclesList = []
 max_level = 10
-retry_button = RetryButton(screen_width - 150, screen_height - 150, 100, 100, "retry.png")
+retry_button = RetryButton(screen_width - 150, screen_height - 150, 100, 100, "assets/retry.png")
 
 while running:
     # poll for events
