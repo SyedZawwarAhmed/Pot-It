@@ -44,7 +44,7 @@ hole = Hole(800, 200, 60, 60)
 
 obstaclesList = []
 max_level = 10
-retry_button = RetryButton(screen_width - 150, screen_height - 150, 100, 100, "assets/retry.png")
+retry_button = RetryButton(screen_width - 150, screen_height - 150, 100, 80, "assets/retry.png")
 
 while running:
     # poll for events
