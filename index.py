@@ -132,7 +132,7 @@ while running:
     pygame.draw.rect(screen, (0,0,0), hole.image)
 
     font = pygame.font.SysFont("Arial", 36)
-    txtsurf = font.render(f'Score: {ball.speed}', True, 'black')
+    txtsurf = font.render(f'Score: {score}', True, 'black')
     screen.blit(txtsurf,(200 - txtsurf.get_width() // 2, 150 - txtsurf.get_height() // 2))
  
     if isBallMoving:
@@ -156,17 +156,9 @@ while running:
 
     pot_tolerance = 50
     hole_rect = hole.rect
-    if ball_rect.colliderect(hole_rect):
-        if (hole_rect.top - ball_rect.bottom) < pot_tolerance:
-            isBallMoving = False
-        if (hole_rect.bottom - ball_rect.top) < pot_tolerance:
-            isBallMoving = False
-        if (hole_rect.right - ball_rect.left) < pot_tolerance:
-            isBallMoving = False
-        if (hole_rect.left - ball_rect.right) < pot_tolerance:
-            isBallMoving = False
-
-
+    if ball_rect.collidepoint(hole_rect.center):
+        isBallMoving = False
+        # score += 1
 
     # if int(ball.pos[1]) == 200 and isBallMoving:
     #     print("Pot")
