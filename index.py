@@ -65,7 +65,6 @@ class Ball():
 
 
     def setDirection(self):
-        print("Hello world")
         mx, my = pygame.mouse.get_pos()
         self.dir = [-mx + self.pos[0], -my + self.pos[1]]
         length = math.hypot(*self.dir)
