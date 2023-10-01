@@ -1,6 +1,11 @@
 import pygame
 import math
 
+ball_image = pygame.image.load("ball.png") 
+ball_image = pygame.transform.scale(ball_image, (100, 100))
+hole_image = pygame.image.load("hole.png") 
+hole_image = pygame.transform.scale(hole_image, (100, 100))
+
 pygame.init()
 screen_width = 1600
 screen_height = 900
@@ -14,6 +19,8 @@ hole_pos = {
     "x": 800,
     "y": 200,
 }
+
+
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
@@ -128,8 +135,30 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("lightgrey")
 
+    
+
+    ball_rect = ball.ball   
+    pot_tolerance = 50
+    hole_rect = hole.rect
+    screen.blit(hole_image, hole.rect)
+
+    # if not screen.get_rect().collidepoint(ball.pos):
+    screen_rect = screen.get_rect()
+    
+    if ball_rect.right >= screen_width or ball_rect.left <= 0:
+        ball.dir[0] *= -1
+    if ball_rect.bottom >= screen_height or ball_rect.top <= 0:
+        ball.dir[1] *= -1
+
+
+    # if ball_rect.collidepoint(hole_rect.center):
+    if abs(ball_rect.x - hole_rect.x) < 40 and abs(ball_rect.y - hole_rect.y) < 40:
+        isBallMoving = False
+    else:
+        screen.blit(ball_image, ball.ball)
+
     pygame.draw.rect(screen, (58.8, 29.4, 0), obstacle.image)
-    pygame.draw.rect(screen, (0,0,0), hole.image)
+    # pygame.draw.rect(screen, (0,0,0), hole.image)
 
     font = pygame.font.SysFont("Arial", 36)
     txtsurf = font.render(f'Score: {score}', True, 'black')
@@ -143,21 +172,10 @@ while running:
         ball.setSpeed()
         ball.setDirection()
 
-    # if not screen.get_rect().collidepoint(ball.pos):
-    screen_rect = screen.get_rect()
-    ball_rect = ball.ball
-    if ball_rect.right >= screen_width or ball_rect.left <= 0:
-        ball.dir[0] *= -1
-    if ball_rect.bottom >= screen_height or ball_rect.top <= 0:
-        ball.dir[1] *= -1
-
     obstacle_rect = obstacle.rect
     check_collision(ball_rect, obstacle_rect, 25)
 
-    pot_tolerance = 50
-    hole_rect = hole.rect
-    if ball_rect.collidepoint(hole_rect.center):
-        isBallMoving = False
+
         # score += 1
 
     # if int(ball.pos[1]) == 200 and isBallMoving:
@@ -167,7 +185,7 @@ while running:
         # ball.pos[0] = 800
         # ball.pos[1] = 800
 
-    pygame.draw.rect(screen, (0, 255, 0), ball.ball)
+    # pygame.draw.rect(screen, (0, 255, 0), ball.ball)
     pygame.display.flip()
 
 pygame.quit()
