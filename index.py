@@ -23,9 +23,9 @@ hole_pos = {
 
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height):
         # Create a surface for the obstacle
-        self.image = pygame.Rect(x, y, 100, 400)
+        self.image = pygame.Rect(x, y, width, height)
         # self.image.fill(color)
 
         # Get the Rect object for the obstacle and set its position
@@ -115,8 +115,15 @@ isBallMoving = False
 shouldSetDirection = False
 score = 0
 ball = Ball(*pos)
-obstacle = Obstacle(300, 200, 100, 100, (58.8, 29.4, 0))  # (x, y, width, height, color)
+obstacle_color = (58.8, 29.4, 0)
+levelOneObstacles = [Obstacle(650, 500, 450, 30)]
+level = 1
 hole = Hole(800, 200, 60, 60)
+
+obstaclesList = []
+if level == 1:
+    obstaclesList = levelOneObstacles
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -133,7 +140,7 @@ while running:
 
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("lightgrey")
+    screen.fill((105,171,81))
 
     
 
@@ -152,16 +159,17 @@ while running:
 
 
     # if ball_rect.collidepoint(hole_rect.center):
-    if abs(ball_rect.x - hole_rect.x) < 40 and abs(ball_rect.y - hole_rect.y) < 40:
+    if abs(ball_rect.x - hole_rect.x) < 50 and abs(ball_rect.y - hole_rect.y) < 50:
         isBallMoving = False
     else:
         screen.blit(ball_image, ball.ball)
 
-    pygame.draw.rect(screen, (58.8, 29.4, 0), obstacle.image)
+    for obstacle in obstaclesList:
+        pygame.draw.rect(screen, obstacle_color, obstacle.image)
     # pygame.draw.rect(screen, (0,0,0), hole.image)
 
     font = pygame.font.SysFont("Arial", 36)
-    txtsurf = font.render(f'Score: {score}', True, 'black')
+    txtsurf = font.render(f'Level: {level}', True, 'black')
     screen.blit(txtsurf,(200 - txtsurf.get_width() // 2, 150 - txtsurf.get_height() // 2))
  
     if isBallMoving:
@@ -172,8 +180,9 @@ while running:
         ball.setSpeed()
         ball.setDirection()
 
-    obstacle_rect = obstacle.rect
-    check_collision(ball_rect, obstacle_rect, 25)
+    for obstacle in obstaclesList:
+        obstacle_rect = obstacle.rect
+        check_collision(ball_rect, obstacle_rect, 25)
 
 
         # score += 1
