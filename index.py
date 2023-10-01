@@ -142,8 +142,6 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill((105,171,81))
 
-    
-
     ball_rect = ball.ball   
     pot_tolerance = 50
     hole_rect = hole.rect
