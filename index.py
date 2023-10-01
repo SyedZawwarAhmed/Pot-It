@@ -101,17 +101,21 @@ score = 0
 ball = Ball(*pos)
 obstacle_color = (58.8, 29.4, 0)
 levelOneObstacles = [Obstacle(650, 500, 450, 30)]
+levelTwoObstacles = [Obstacle(250, 500, 450, 30), Obstacle(850, 400, 450, 30)]
 level = 1
 hole = Hole(800, 200, 60, 60)
 
 obstaclesList = []
-if level == 1:
-    obstaclesList = levelOneObstacles
-
+max_level = 2
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     clock.tick(60)  
+    if level == 1:
+        obstaclesList = levelOneObstacles
+    elif level == 2:
+        obstaclesList = levelTwoObstacles
+
     mx,my = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -141,6 +145,9 @@ while running:
 
     if abs(ball_rect.x - hole_rect.x) < 50 and abs(ball_rect.y - hole_rect.y) < 50:
         isBallMoving = False
+        if level != max_level:
+            level += 1
+            ball = Ball(*pos)
     else:
         screen.blit(ball_image, ball.ball)
 
